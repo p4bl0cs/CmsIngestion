@@ -113,5 +113,41 @@ namespace CmsIngestion.Application.Services
                 Type = e.IsDisabled ? "unpublish" : "publish"
             });
         }
+
+        public async Task<IEnumerable<CmsEventDto>> GetEntitiesForUserAsync(bool isAdmin, CancellationToken cancellationToken = default)
+        {
+            var entities = await _repository.GetAllAsync(cancellationToken);
+
+            if (!isAdmin)
+            {
+                entities = entities.Where(e => !e.IsDisabled);
+            }
+
+            return entities.Select(e => new CmsEventDto
+            {
+                Id = e.Id,
+                Version = e.Version,
+                Timestamp = e.UpdatedAt,
+                Payload = !string.IsNullOrEmpty(e.PayloadJson) ? JsonNode.Parse(e.PayloadJson) as JsonObject : null,
+                Type = e.IsDisabled ? "unpublish" : "publish"
+            });
+        }
+
+        public async Task DisableEntityAsync(string id, CancellationToken cancellationToken = default)
+        {
+            var entity = await _repository.GetByIdAsync(id, cancellationToken);
+            if (entity != null)
+            {
+                entity.IsDisabled = true;
+                entity.UpdatedAt = DateTimeOffset.UtcNow;
+                await _repository.UpdateAsync(entity, cancellationToken);
+                await _repository.SaveChangesAsync(cancellationToken);
+                _logger.LogInformation("Admin override: Disabled entity ID '{Id}' locally.", id);
+            }
+            else
+            {
+                throw new KeyNotFoundException($"Entity with ID '{id}' was not found.");
+            }
+        }
     }
 }

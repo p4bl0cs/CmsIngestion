@@ -29,9 +29,9 @@ The solution follows strict Clean Architecture and SOLID principles, split acros
   * `publish`: Creates or updates entities, respecting version numbers to prevent out-of-order race conditions.
   * `unPublish`: Sets the `IsDisabled` flag to true while maintaining version safety.
   * `delete`: Soft/hard deletes records safely.
-* **Consumer & Admin REST API (`GET /api/entities`):**
+* **Consumer & Admin REST API (`GET /cms/entities`):**
   * Consumers receive only active, published entities (`IsDisabled == false`).
-  * Admins can view all records via query parameters (`?isAdmin=true`) and explicitly override/disable entities (`POST /api/entities/{id}/disable`).
+  * Admins can view all records via the `X-User-Role: admin` header and explicitly override/disable entities (`PATCH /cms/entities/{id}/disable`).
 * **Zero-Config Database Startup:** Automatically provisions the SQLite database file (`cms.db`) and tables on application startup using EF Core `EnsureCreated()`.
 
 ---
@@ -83,3 +83,27 @@ You can test the webhook endpoint using `curl` or Postman.
     }
   ]
   ```
+  
+---
+
+## ?? REST API Endpoints & Testing
+
+### 1. Consumer Listing (Public View)
+- **GET `/cms/entities`**
+  - **Description:** Returns only active, published entities (automatically hides disabled or unpublished records).
+
+### 2. Admin Listing (All Records)
+- **GET `/cms/entities`**
+  - **Headers:** `X-User-Role: admin`
+  - **Description:** Returns all entities, including disabled/unpublished ones.
+
+### 3. Admin Disable Override
+- **PATCH `/cms/entities/{id}/disable`**
+  - **Headers:** `X-User-Role: admin`
+  - **Description:** Performs a local API overwrite to disable an entity without altering the upstream CMS data stream.
+
+---
+
+## ?? Performance & Observability Highlights
+- **EF Core Optimization:** Read operations utilize `.AsNoTracking()` to reduce memory overhead and maximize query performance under high load.
+- **Global Error Handling:** RFC 7807 compliant `ProblemDetails` middleware catches unhandled exceptions and returns standardized JSON error payloads with unique TraceIDs.

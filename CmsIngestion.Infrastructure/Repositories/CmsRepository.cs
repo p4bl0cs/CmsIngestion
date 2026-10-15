@@ -16,7 +16,7 @@ namespace CmsIngestion.Infrastructure.Repositories
 
         public async Task<CmsEntity?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
         {
-            return await _context.CmsEntities.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+            return await _context.CmsEntities.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
         }
 
         public async Task AddAsync(CmsEntity entity, CancellationToken cancellationToken = default)
@@ -43,7 +43,7 @@ namespace CmsIngestion.Infrastructure.Repositories
 
         public async Task<IEnumerable<CmsEntity>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            return await _context.CmsEntities.ToListAsync(cancellationToken);
+            return await _context.CmsEntities.AsNoTracking().ToListAsync(cancellationToken);
         }
     }
 }
