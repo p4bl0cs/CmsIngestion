@@ -86,7 +86,7 @@ You can test the webhook endpoint using `curl` or Postman.
   
 ---
 
-## ?? REST API Endpoints & Testing
+## REST API Endpoints & Testing
 
 ### 1. Consumer Listing (Public View)
 - **GET `/cms/entities`**
@@ -104,6 +104,6 @@ You can test the webhook endpoint using `curl` or Postman.
 
 ---
 
-## ?? Performance & Observability Highlights
+## Performance & Observability Highlights
 - **EF Core Optimization:** Read operations utilize `.AsNoTracking()` to reduce memory overhead and maximize query performance under high load.
 - **Global Error Handling:** RFC 7807 compliant `ProblemDetails` middleware catches unhandled exceptions and returns standardized JSON error payloads with unique TraceIDs.
