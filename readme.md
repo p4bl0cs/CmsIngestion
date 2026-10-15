@@ -66,7 +66,7 @@ You can test the webhook endpoint using `curl` or Postman.
 
 **Request Example (`POST /cms/events`):**
 * **Headers:**
-  * `Authorization`: `Basic <base64-encoded-credentials>` (Username must be 10–20 chars; Password must be a GUID, e.g., `adminuser123:d3b07384-d113-4ec2-849e-270edbbe37d3`)
+  * `Authorization`: `Basic <base64-encoded-credentials>` (Must match the default `appsettings.json` credentials, e.g., `webhookadmin:a1b2c3d4-e5f6-7890-abcd-ef1234567890`)
   * `Content-Type`: `application/json`
 * **Body:**
   ```json

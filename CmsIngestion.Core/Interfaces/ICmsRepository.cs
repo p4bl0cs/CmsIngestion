@@ -1,9 +1,4 @@
 ﻿using CmsIngestion.Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CmsIngestion.Core.Interfaces
 {
@@ -14,5 +9,6 @@ namespace CmsIngestion.Core.Interfaces
         Task UpdateAsync(CmsEntity entity, CancellationToken cancellationToken = default);
         Task DeleteAsync(CmsEntity entity, CancellationToken cancellationToken = default);
         Task SaveChangesAsync(CancellationToken cancellationToken = default);
+        Task<IEnumerable<CmsEntity>> GetAllAsync(CancellationToken cancellationToken = default);
     }
 }

@@ -26,5 +26,12 @@ namespace CmsIngestion.Api.Controllers
             await _eventService.ProcessEventsAsync(events, cancellationToken);
             return Ok(new { message = "Events processed successfully." });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllEvents(CancellationToken cancellationToken)
+        {
+            var events = await _eventService.GetAllAsync(cancellationToken);
+            return Ok(events);
+        }
     }
 }

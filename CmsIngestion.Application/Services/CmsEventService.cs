@@ -2,11 +2,7 @@
 using CmsIngestion.Core.Entities;
 using CmsIngestion.Core.Interfaces;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json.Nodes;
 
 namespace CmsIngestion.Application.Services
 {
@@ -90,7 +86,7 @@ namespace CmsIngestion.Application.Services
 
                         default:
                             _logger.LogWarning("Unknown event type '{Type}' received for ID '{Id}'", evt.Type, evt.Id);
-                            break;
+                            throw new InvalidOperationException($"Unsupported or missing event type: '{evt.Type}'");
                     }
 
                     await _repository.SaveChangesAsync(cancellationToken);
@@ -102,6 +98,20 @@ namespace CmsIngestion.Application.Services
                     throw;
                 }
             }
+        }
+
+        public async Task<IEnumerable<CmsEventDto>> GetAllAsync(CancellationToken cancellationToken = default)
+        {
+            var entities = await _repository.GetAllAsync(cancellationToken);
+
+            return entities.Select(e => new CmsEventDto
+            {
+                Id = e.Id,
+                Version = e.Version,
+                Timestamp = e.UpdatedAt,
+                Payload = !string.IsNullOrEmpty(e.PayloadJson) ? JsonNode.Parse(e.PayloadJson) as JsonObject : null,
+                Type = e.IsDisabled ? "unpublish" : "publish"
+            });
         }
     }
 }

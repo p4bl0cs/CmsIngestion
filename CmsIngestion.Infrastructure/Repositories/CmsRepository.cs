@@ -2,11 +2,6 @@
 using CmsIngestion.Core.Interfaces;
 using CmsIngestion.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CmsIngestion.Infrastructure.Repositories
 {
@@ -44,6 +39,11 @@ namespace CmsIngestion.Infrastructure.Repositories
         public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<CmsEntity>> GetAllAsync(CancellationToken cancellationToken = default)
+        {
+            return await _context.CmsEntities.ToListAsync(cancellationToken);
         }
     }
 }
