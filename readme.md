@@ -44,7 +44,7 @@ The solution follows strict Clean Architecture and SOLID principles, split acros
 ### Clone and Run
 1. Clone the repository:
    ```bash
-   git clone <your-repository-url>
+   git clone https://github.com/p4bl0cs/CmsIngestion.git
    cd CmsIngestion
    ```
 2. Build the solution:
